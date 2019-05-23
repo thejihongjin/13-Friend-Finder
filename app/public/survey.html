@@ -21,7 +21,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Friend Finder</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./assets/css/style.css"> -->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery.js"></script>
@@ -78,91 +78,6 @@
     </div>
 
     <script type="text/javascript">
-        generateSurveyForm();
-
-        $("#submit").on("click", function () {
-            event.preventDefault();
-            // checkAnswers();
-
-            // Form validation
-            function validateForm() {
-                var isValid = true;
-                $(".form-control").each(function () {
-                    if ($(this).val() === "") {
-                        isValid = false;
-                    }
-                });
-
-                // $(".chosen-select").each(function () {
-
-                //     if ($(this).val() === "") {
-                //         isValid = false;
-                //     }
-                // });
-                return isValid;
-            }
-
-
-            //     function checkAnswers() {//////change name
-            //     for (var i = 0; i < surveyArr.length; i++) {
-            //         var radioName = "input[name='q" + i + "']:checked";
-            //         var radioValue = $(radioName).val();
-            //         if (radioValue !== undefined) {
-            //             userAnswers.push(radioValue);
-            //         } else {
-            //             userAnswers.push('');
-            //         }
-            //     }
-            // }
-
-            // If all required fields are filled
-            if (validateForm()) {
-                // Create an object for the user"s data
-                var userData = {
-                    name: $("#name").val(),
-                    photo: $("#photo").val(),
-                    scores: [
-                        // $("#q1").val(),
-                        // $("#q2").val(),
-                        // $("#q3").val(),
-                        // $("#q4").val(),
-                        // $("#q5").val(),
-                        // $("#q6").val(),
-                        // $("#q7").val(),
-                        // $("#q8").val(),
-                        // $("#q9").val(),
-                        // $("#q10").val()
-                    ]
-                };
-
-                for (var i = 0; i < surveyArr.length; i++) {
-                    var radioName = "input[name='q" + i + "']:checked";
-                    var radioValue = $(radioName).val();
-                    // if (radioValue !== undefined) {
-                        userData.scores.push(radioValue);
-                    // } else {
-                        // userAnswers.push('');
-                    // }
-                }
-                console.log(userData);
-
-                // AJAX post the data to the friends API.
-                // $.post("/api/friends", userData, function (data) {
-
-                    //     // Grab the result from the AJAX post so that the best match's name and photo are displayed.
-                    //     $("#match-name").text(data.name);
-                    //     $("#match-img").attr("src", data.photo);
-
-                    //     // Show the modal with the best match
-                    //     $("#results-modal").modal("toggle");
-
-                // });
-            } else {
-                alert("Please fill out all fields before submitting!");
-            }
-        });
-
-        function generateSurveyForm() {
             var surveyArr = [
                 {
                     question: '1. Your mind is always buzzing with unexplored ideas and plans.'
@@ -196,10 +111,69 @@
                 }
             ];
 
+        generateSurveyForm();
+
+        $("#submit").on("click", function () {
+            event.preventDefault();
+            // checkAnswers();
+
+            // Form validation
+            function validateForm() {
+                var isValid = true;
+                $(".form-control").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
+                });
+
+                // $(".chosen-select").each(function () {
+
+                //     if ($(this).val() === "") {
+                //         isValid = false;
+                //     }
+                // });
+                return isValid;
+            }
+
+            // If all required fields are filled
+            if (validateForm()) {
+                // Create an object for the user"s data
+                var userData = {
+                    name: $("#name").val(),
+                    photo: $("#photo").val(),
+                    scores: []
+                };
+
+                for (var i = 0; i < surveyArr.length; i++) {
+                    var radioName = "input[name='q" + parseInt(i + 1) + "']:checked";
+                    var radioValue = $(radioName).val();
+                        userData.scores.push(radioValue);
+                }
+                // console.log(userData);
+
+                // AJAX post the data to the friends API.
+                // $.post("/api/friends", userData, function (data) {
+
+                    //     // Grab the result from the AJAX post so that the best match's name and photo are displayed.
+                    //     $("#match-name").text(data.name);
+                    //     $("#match-img").attr("src", data.photo);
+
+                    //     // Show the modal with the best match
+                    //     $("#results-modal").modal("toggle");
+
+                // });
+            } else {
+                alert("Please fill out all fields before submitting!");
+            }
+        });
+
+        function generateSurveyForm() {
+
             var formContainer = $("<form>");
             formContainer.addClass("container");
 
             for (var i = 0; i < surveyArr.length; i++) {
+				var questionNum = parseInt(i + 1);
                 var surveyQuestion = $("<span>");
                 $(surveyQuestion).text(surveyArr[i].question);
                 $(formContainer).append(surveyQuestion);
@@ -208,8 +182,8 @@
                 for (var j = 1; j < 6; j++) {
                     var answerRadio = $("<input />");
                     answerRadio.attr("type", "radio");
-                    answerRadio.attr("name", "q" + parseInt(i + 1)); //to group radio selections together
-                    answerRadio.attr("id", "q" + parseInt(i + 1) + "a" + j);
+                    answerRadio.attr("name", "q" + questionNum); //to group radio selections together
+                    answerRadio.attr("id", "q" + questionNum + "a" + j);
                     answerRadio.attr("value", j);
 
                     var answerLabel = $("<label>");
