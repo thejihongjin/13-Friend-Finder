@@ -1,0 +1,232 @@
+<!-- 1. Your survey should have 10 questions of your choosing. Each answer should be on a scale of 1 to 5 based on how much the user agrees or disagrees with a question. -->
+<!-- 
+6. Determine the user's most compatible friend using the following as a guide:
+   * Convert each user's results into a simple array of numbers (ex: `[5, 1, 4, 4, 5, 1, 2, 5, 4, 1]`).
+   * With that done, compare the difference between current user's scores against those from other users, question by question. Add up the differences to calculate the `totalDifference`.
+     * Example:
+       * User 1: `[5, 1, 4, 4, 5, 1, 2, 5, 4, 1]`
+       * User 2: `[3, 2, 6, 4, 5, 1, 2, 5, 4, 1]`
+       * Total Difference: **2 + 1 + 2 =** **_5_**
+   * Remember to use the absolute value of the differences. Put another way: no negative solutions! Your app should calculate both `5-3` and `3-5` as `2`, and so on.
+   * The closest match will be the user with the least amount of difference.
+7. Once you've found the current user's most compatible friend, display the result as a modal pop-up.
+   * The modal should display both the name and picture of the closest match.
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Friend Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+    <!-- Chosen -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script> -->
+</head>
+
+<body>
+    <div class="container">
+        <p>Survey Questions</p>
+        <hr>
+        <p><strong>About You</strong></p>
+        <span>Name (Required)</span>
+        <input type="text" id="name" class="form-control" required>
+        <span>Link to Photo Image (Required)</span>
+        <input type="text" id="photo" class="form-control" required>
+        <hr>
+        <div id="survey-content"></div>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit">Submit</button>
+        <hr>
+        <footer class="footer">
+            <div class="container">
+                <p><a href="/api/friends">API Friends List</a> | <a
+                        href="https://github.com/afhaque/friendfinder">GitHub Repo</a></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="results-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h2 class="modal-title"><strong>Best Match</strong></h2>
+                </div>
+                <div class="modal-body">
+                    <h2 id="match-name"></h2>
+                    <img id="match-img" src="" alt="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        generateSurveyForm();
+
+        $("#submit").on("click", function () {
+            event.preventDefault();
+            // checkAnswers();
+
+            // Form validation
+            function validateForm() {
+                var isValid = true;
+                $(".form-control").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
+                });
+
+                // $(".chosen-select").each(function () {
+
+                //     if ($(this).val() === "") {
+                //         isValid = false;
+                //     }
+                // });
+                return isValid;
+            }
+
+
+            //     function checkAnswers() {//////change name
+            //     for (var i = 0; i < surveyArr.length; i++) {
+            //         var radioName = "input[name='q" + i + "']:checked";
+            //         var radioValue = $(radioName).val();
+            //         if (radioValue !== undefined) {
+            //             userAnswers.push(radioValue);
+            //         } else {
+            //             userAnswers.push('');
+            //         }
+            //     }
+            // }
+
+            // If all required fields are filled
+            if (validateForm()) {
+                // Create an object for the user"s data
+                var userData = {
+                    name: $("#name").val(),
+                    photo: $("#photo").val(),
+                    scores: [
+                        // $("#q1").val(),
+                        // $("#q2").val(),
+                        // $("#q3").val(),
+                        // $("#q4").val(),
+                        // $("#q5").val(),
+                        // $("#q6").val(),
+                        // $("#q7").val(),
+                        // $("#q8").val(),
+                        // $("#q9").val(),
+                        // $("#q10").val()
+                    ]
+                };
+
+                for (var i = 0; i < surveyArr.length; i++) {
+                    var radioName = "input[name='q" + i + "']:checked";
+                    var radioValue = $(radioName).val();
+                    // if (radioValue !== undefined) {
+                        userData.scores.push(radioValue);
+                    // } else {
+                        // userAnswers.push('');
+                    // }
+                }
+                console.log(userData);
+
+                // AJAX post the data to the friends API.
+                // $.post("/api/friends", userData, function (data) {
+
+                    //     // Grab the result from the AJAX post so that the best match's name and photo are displayed.
+                    //     $("#match-name").text(data.name);
+                    //     $("#match-img").attr("src", data.photo);
+
+                    //     // Show the modal with the best match
+                    //     $("#results-modal").modal("toggle");
+
+                // });
+            } else {
+                alert("Please fill out all fields before submitting!");
+            }
+        });
+
+        function generateSurveyForm() {
+            var surveyArr = [
+                {
+                    question: '1. Your mind is always buzzing with unexplored ideas and plans.'
+                },
+                {
+                    question: '2. Generally speaking, you rely more on your experience than your imagination.'
+                },
+                {
+                    question: '3. You find it easy to stay relaxed and focused even when there is some pressure.'
+                },
+                {
+                    question: "4. You rarely do something just out of sheer curiosity."
+                },
+                {
+                    question: '5. People can rarely upset you.'
+                },
+                {
+                    question: '6. It is often difficult for you to relate to other people’s feelings.'
+                },
+                {
+                    question: "7. In a discussion, truth should be more important than people’s sensitivities."
+                },
+                {
+                    question: '8. You rarely get carried away by fantasies and ideas.'
+                },
+                {
+                    question: '9. You think that everyone’s views should be respected regardless of whether they are supported by facts or not.'
+                },
+                {
+                    question: "10. You feel more energetic after spending time with a group of people."
+                }
+            ];
+
+            var formContainer = $("<form>");
+            formContainer.addClass("container");
+
+            for (var i = 0; i < surveyArr.length; i++) {
+                var surveyQuestion = $("<span>");
+                $(surveyQuestion).text(surveyArr[i].question);
+                $(formContainer).append(surveyQuestion);
+                $(formContainer).append("<br>");
+
+                for (var j = 1; j < 6; j++) {
+                    var answerRadio = $("<input />");
+                    answerRadio.attr("type", "radio");
+                    answerRadio.attr("name", "q" + parseInt(i + 1)); //to group radio selections together
+                    answerRadio.attr("id", "q" + parseInt(i + 1) + "a" + j);
+                    answerRadio.attr("value", j);
+
+                    var answerLabel = $("<label>");
+                    answerLabel.attr("for", "q" + i + "a" + j);
+                    $(answerLabel).text(j);
+
+                    $(formContainer).append(answerRadio);
+                    $(formContainer).append(answerLabel);
+                    // $(formContainer).append("<br>");
+                }
+
+                $(formContainer).append("<br>");
+            }
+
+            $("#survey-content").append(formContainer);
+        }
+    </script>
+</body>
+
+</html>

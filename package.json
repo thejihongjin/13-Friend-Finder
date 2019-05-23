@@ -1,7 +1,7 @@
 {
   "name": "13-friend-finder",
   "version": "1.0.0",
-  "description": "# Friend Finder - Node and Express Servers ### Overview In this activity, you'll build a compatibility-based \"FriendFinder\" application -- basically a dating app. This full-stack site will take in results from your users' surveys, then compare their answers with those from other users. The app will then display the name and picture of the user with the best overall match.",
+  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/thejihongjin/13-Friend-Finder/issues"
   },
-  "homepage": "https://github.com/thejihongjin/13-Friend-Finder#readme"
+  "homepage": "https://github.com/thejihongjin/13-Friend-Finder#readme",
+  "dependencies": {
+    "express": "^4.17.0",
+    "nodemon": "^1.19.0",
+    "path": "^0.12.7"
+  }
 }

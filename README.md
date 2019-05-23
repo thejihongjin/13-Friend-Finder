@@ -1,4 +1,5 @@
 # 13-Friend-Finder
+LINK
 
 # Friend Finder - Node and Express Servers
 ### Overview
@@ -6,15 +7,8 @@ In this activity, you'll build a compatibility-based "FriendFinder" application 
 
 You will use Express to handle routing. Make sure you deploy your app to Heroku so other users can fill it out.
 
-
 ### Before You Begin
 * Check out [this demo version of the site](https://friend-finder-fsf.herokuapp.com/). Use this as a model for how we expect your assignment look and operate.
-* Create a folder called `FriendFinder`. Inside the folder, organize your directories so it matches the following:
-
-  ```
-  FriendFinder
-    - node_modules
-  ```
 
 ### Instructions
 1. Your survey should have 10 questions of your choosing. Each answer should be on a scale of 1 to 5 based on how much the user agrees or disagrees with a question.
