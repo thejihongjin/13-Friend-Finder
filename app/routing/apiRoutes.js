@@ -1,7 +1,3 @@
-// 4. Your `apiRoutes.js` file should contain two routes:
-//    * A GET route with the url `/api/friends`. This will be used to display a JSON of all possible friends.
-//    * A POST routes `/api/friends`. This will be used to handle incoming survey results. This route will also be used to handle the compatibility logic.
-
 var friendsData = require("../data/friends");
 
 module.exports = function (app) {
@@ -11,6 +7,27 @@ module.exports = function (app) {
 
     app.post("/api/friends", function (req, res) {
         friendsData.push(req.body);
-        // res.json();
+
+        var user = friendsData[friendsData.length - 1];
+        var lastDifference = 0;
+        var bestMatch;
+
+        for (var i = 0; i < friendsData.length - 1; i++) {
+            var totalDifference = 0;
+            for (var j = 0; j < friendsData[i].scores.length; j++) {
+                totalDifference += Math.abs(parseInt(user.scores[j]) - parseInt(friendsData[i].scores[j]));
+            }
+
+            if (lastDifference === 0) {
+                lastDifference = totalDifference;
+            } else {
+                if (totalDifference < lastDifference) {
+                    lastDifference = totalDifference;
+                    bestMatch = friendsData[i];
+                }
+            }
+        }
+
+        res.json(bestMatch);
     });
 };
